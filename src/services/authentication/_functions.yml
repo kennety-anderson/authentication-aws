@@ -1,0 +1,6 @@
+authCustomer:
+  handler: bin/auth-customers/auth
+  events:
+    - http:
+        path: /auth
+        method: get
