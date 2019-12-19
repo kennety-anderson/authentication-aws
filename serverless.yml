@@ -1,14 +1,18 @@
 service: authentication
 
-frameworkVersion: ">=1.28.0 <2.0.0"
+frameworkVersion: '>=1.28.0 <2.0.0'
 
 provider:
   name: aws
   runtime: go1.x
+  environment: ${file(config/${self:custom.stage}.yml):environment} # pega a varivel de acordo com o ambiente
 
 plugins:
   - serverless-offline
   - serverless-iam-roles-per-function
+
+custom:
+  stage: ${opt:stage, self:provider.stage, 'local'}
 
 package:
   exclude:

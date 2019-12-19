@@ -4,24 +4,38 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go/aws"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Response is of type APIGatewayProxyResponse since we're leveraging the
-// AWS Lambda Proxy Request functionality (default behavior)
-//
-// https://serverless.com/framework/docs/providers/aws/events/apigateway/#lambda-proxy-integration
 type Response events.APIGatewayProxyResponse
+
+var (
+	dbName = "slsTest"
+	uri    = aws.String(os.Getenv("MONGO_URI"))
+)
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context) (Response, error) {
 	var buf bytes.Buffer
 
+	clientOpts := options.Client().ApplyURI(*uri)
+	client, _ := mongo.Connect(ctx, clientOpts)
+
+	db := client.Database(dbName)
+
+	fmt.Println(db.Name()) // output: glottery
+
 	body, err := json.Marshal(map[string]interface{}{
-		"message": "Go Serverless v1.0! Your function executed successfully!",
+		"message": "Lambda auth in progress",
 	})
+
 	if err != nil {
 		return Response{StatusCode: 404}, err
 	}

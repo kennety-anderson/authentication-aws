@@ -1,6 +1,8 @@
 # packges directories
 node_modules
 
+# dep vendor directories
+vendor
 # Serverless directories
 .serverless
 
