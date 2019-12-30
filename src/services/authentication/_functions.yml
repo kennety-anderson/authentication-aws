@@ -3,4 +3,4 @@ authCustomer:
   events:
     - http:
         path: /auth
-        method: get
+        method: post

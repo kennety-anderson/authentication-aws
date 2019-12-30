@@ -32,12 +32,6 @@
   revision = "ff6b7dc882cf4cfba7ee0b9f7dcc1ac096c554aa"
 
 [[projects]]
-  name = "github.com/mongodb/mongo-go-driver"
-  packages = ["bson","bson/bsoncodec","bson/bsonrw","bson/bsontype","bson/primitive","event","internal","mongo","mongo/options","mongo/readconcern","mongo/readpref","mongo/writeconcern","tag","version","x/bsonx","x/bsonx/bsoncore","x/mongo/driver","x/mongo/driver/auth","x/mongo/driver/auth/internal/gssapi","x/mongo/driver/session","x/mongo/driver/topology","x/mongo/driver/uuid","x/network/address","x/network/command","x/network/compressor","x/network/connection","x/network/connstring","x/network/description","x/network/result","x/network/wiremessage"]
-  revision = "e1f3d104525e687eda76125707c9852e429f2730"
-  version = "v0.3.0"
-
-[[projects]]
   name = "github.com/pkg/errors"
   packages = ["."]
   revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
@@ -57,14 +51,14 @@
 
 [[projects]]
   name = "go.mongodb.org/mongo-driver"
-  packages = ["bson","bson/bsoncodec","bson/bsonoptions","bson/bsonrw","bson/bsontype","bson/primitive","event","internal","mongo/options","mongo/readconcern","mongo/readpref","mongo/writeconcern","tag","x/bsonx","x/bsonx/bsoncore","x/mongo/driver","x/mongo/driver/address","x/mongo/driver/connstring","x/mongo/driver/description","x/mongo/driver/dns","x/mongo/driver/mongocrypt","x/mongo/driver/mongocrypt/options","x/mongo/driver/session","x/mongo/driver/uuid","x/mongo/driver/wiremessage"]
+  packages = ["bson","bson/bsoncodec","bson/bsonoptions","bson/bsonrw","bson/bsontype","bson/primitive","event","internal","mongo","mongo/options","mongo/readconcern","mongo/readpref","mongo/writeconcern","tag","version","x/bsonx","x/bsonx/bsoncore","x/mongo/driver","x/mongo/driver/address","x/mongo/driver/auth","x/mongo/driver/auth/internal/gssapi","x/mongo/driver/connstring","x/mongo/driver/description","x/mongo/driver/dns","x/mongo/driver/mongocrypt","x/mongo/driver/mongocrypt/options","x/mongo/driver/operation","x/mongo/driver/session","x/mongo/driver/topology","x/mongo/driver/uuid","x/mongo/driver/wiremessage"]
   revision = "b414b897457665f12997cefd10ad934ccb9dfb3e"
   version = "v1.2.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["pbkdf2"]
+  packages = ["bcrypt","blowfish","pbkdf2"]
   revision = "e9b2fee46413994441b28dfca259d911d963dfed"
 
 [[projects]]
@@ -82,6 +76,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5eee533694fed25f7a916b29ad8d705575ac8a9523b348ed7c883282da0bd2f4"
+  inputs-digest = "b7b9ca7b0ba9514dcdee6813bcd6b8cae2227d93d8fef9a2c366362565f59835"
   solver-name = "gps-cdcl"
   solver-version = 1

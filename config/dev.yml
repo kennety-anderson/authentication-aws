@@ -1,2 +1,5 @@
 environment:
-  MONGO_URI: ${ssm:/db/connectionMongo}
+  MONGO_URI: ${ssm:/db/mongodb/uri}
+  DATABASE: ${ssm:/db/mongodb/dataBase}
+  SECRET_ACCESS_TOKEN: ${ssm:/${self:custom.stage}/token/secretAccessToken}
+  SECRET_REFRESH_TOKEN: ${ssm:/${self:custom.stage}/token/secretRefreshToken}

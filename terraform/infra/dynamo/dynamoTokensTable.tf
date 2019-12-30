@@ -1,5 +1,5 @@
-resource "aws_dynamodb_table" "access_tokens" {
-  name     = "${var.environment}_customers_access_tokens"
+resource "aws_dynamodb_table" "customers_access_tokens_table" {
+  name     = "${var.environment}-customersAccessTokens"
   hash_key = "id"
   attribute {
     name = "id"
@@ -7,4 +7,10 @@ resource "aws_dynamodb_table" "access_tokens" {
   }
   write_capacity = "${var.write_capacity}"
   read_capacity  = "${var.read_capacity}"
+}
+
+resource "aws_ssm_parameter" "customers_access_tokens_table_name" {
+  name  = "/${var.environment}/db/dynamodb/customersAccessTokensTable"
+  type  = "String"
+  value = "${aws_dynamodb_table.customers_access_tokens_table.name}"
 }
