@@ -1,8 +1,8 @@
 resource "aws_dynamodb_table" "customers_access_tokens_table" {
   name     = "${var.environment}-customersAccessTokens"
-  hash_key = "id"
+  hash_key = "accessToken"
   attribute {
-    name = "id"
+    name = "accessToken"
     type = "S"
   }
   write_capacity = "${var.write_capacity}"

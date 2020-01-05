@@ -15,9 +15,15 @@
 
 [[projects]]
   name = "github.com/aws/aws-sdk-go"
-  packages = ["aws","aws/awserr","aws/credentials","aws/endpoints","internal/ini","internal/sdkio","internal/shareddefaults"]
+  packages = ["aws","aws/awserr","aws/awsutil","aws/client","aws/client/metadata","aws/corehandlers","aws/credentials","aws/credentials/ec2rolecreds","aws/credentials/endpointcreds","aws/credentials/processcreds","aws/credentials/stscreds","aws/crr","aws/csm","aws/defaults","aws/ec2metadata","aws/endpoints","aws/request","aws/session","aws/signer/v4","internal/ini","internal/sdkio","internal/sdkmath","internal/sdkrand","internal/sdkuri","internal/shareddefaults","private/protocol","private/protocol/json/jsonutil","private/protocol/jsonrpc","private/protocol/query","private/protocol/query/queryutil","private/protocol/rest","private/protocol/xml/xmlutil","service/dynamodb","service/dynamodb/dynamodbattribute","service/sts","service/sts/stsiface"]
   revision = "a25ea3950893fa501b1fc9619eb1b3546c7ad3a0"
   version = "v1.26.5"
+
+[[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   name = "github.com/go-stack/stack"
@@ -30,6 +36,11 @@
   name = "github.com/golang/snappy"
   packages = ["."]
   revision = "ff6b7dc882cf4cfba7ee0b9f7dcc1ac096c554aa"
+
+[[projects]]
+  name = "github.com/jmespath/go-jmespath"
+  packages = ["."]
+  revision = "c2b33e84"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -76,6 +87,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b7b9ca7b0ba9514dcdee6813bcd6b8cae2227d93d8fef9a2c366362565f59835"
+  inputs-digest = "08c07f2b1b43fcdade378828f537419a5e863519b07caf6eb53ff1a48a6bef04"
   solver-name = "gps-cdcl"
   solver-version = 1

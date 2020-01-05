@@ -1,5 +1,10 @@
 authCustomer:
   handler: bin/auth-customers/auth
+  iamRoleStatements:
+    - Effect: "Allow"
+      Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.DYNAMO_TABLE}
+      Action:
+        - dynamodb:PutItem
   events:
     - http:
         path: /auth
