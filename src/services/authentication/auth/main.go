@@ -21,7 +21,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Request is event input lambda
 type Request events.APIGatewayProxyRequest
+
+// Response is event output lambda
 type Response events.APIGatewayProxyResponse
 
 var (
@@ -63,21 +66,42 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
 	}
 
+	timeNow := time.Now()
+
 	// geração dos tokens de acesso
-	claims := &jwt.MapClaims{
+	// claimsAccess := &jwt.MapClaims{
+	// 	"_id":   result["_id"],
+	// 	"name":  result["name"],
+	// 	"email": result["email"],
+	// 	"exp":   timeNow.UTC().Add(5 * time.Minute).Unix(),
+	// 	"date":  timeNow,
+	// }
+
+	// claimsRefresh := &jwt.MapClaims{
+	// 	"_id":  result["_id"],
+	// 	"exp":  timeNow.UTC().Add(24 * time.Hour).Unix(),
+	// 	"date": timeNow,
+	// }
+
+	accessJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
 		"_id":   result["_id"],
 		"name":  result["name"],
 		"email": result["email"],
-		"nbf":   time.Now(),
-	}
+		"exp":   timeNow.UTC().Add(5 * time.Minute).Unix(),
+		"date":  timeNow,
+	})
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	refreshJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
+		"_id":  result["_id"],
+		"exp":  timeNow.UTC().Add(24 * time.Hour).Unix(),
+		"date": timeNow,
+	})
 
 	secretAccessToken := []byte(*secretKeyAccessToken)
 	secretRefreshToken := []byte(*secretKeyRefreshToken)
 
-	accessToken, _ := token.SignedString(secretAccessToken)
-	refreshToken, _ := token.SignedString(secretRefreshToken)
+	accessToken, _ := accessJwt.SignedString(secretAccessToken)
+	refreshToken, _ := refreshJwt.SignedString(secretRefreshToken)
 
 	// PutItems dos tokens de acesso no dynamodb
 	sess := session.Must(session.NewSessionWithOptions(session.Options{

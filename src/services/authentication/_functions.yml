@@ -9,3 +9,25 @@ authCustomer:
     - http:
         path: /auth
         method: post
+        cors: true
+
+authorizerCustomer:
+  handler: bin/auth-customers/authorizer
+  iamRoleStatements:
+    - Effect: "Allow"
+      Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.DYNAMO_TABLE}
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+
+pingCustomer:
+  handler: bin/auth-customers/ping
+  events:
+    - http:
+        path: /ping
+        method: get
+        cors: true
+        authorizer:
+          name: authorizerCustomer
+          resultTtlInSeconds: 0
+          identitySource: method.request.header.Authorization
