@@ -9,22 +9,23 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-// Request is event input lambda
+// Request is event output lambda
 type Request events.APIGatewayProxyRequest
 
 // Response is event output lambda
 type Response events.APIGatewayProxyResponse
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
-func Handler(ctx context.Context, event Request) (Response, error) {
+func Handler(ctx context.Context, events Request) (Response, error) {
+	var body []byte
 	var buf bytes.Buffer
 
 	body, err := json.Marshal(map[string]interface{}{
-		"message": "ping",
+		"message": "lambda refreshToken in progress",
 	})
 
 	if err != nil {
-		return Response{StatusCode: 500, Body: "Internal Server Error"}, nil
+		return Response{StatusCode: 500, Body: "Internal server error!"}, nil
 	}
 
 	json.HTMLEscape(&buf, body)

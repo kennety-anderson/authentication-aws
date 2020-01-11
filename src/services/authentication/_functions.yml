@@ -13,12 +13,12 @@ authCustomer:
 
 authorizerCustomer:
   handler: bin/auth-customers/authorizer
-  iamRoleStatements:
-    - Effect: "Allow"
-      Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.DYNAMO_TABLE}
-      Action:
-        - dynamodb:Query
-        - dynamodb:GetItem
+  # iamRoleStatements:
+  #   - Effect: "Allow"
+  #     Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.DYNAMO_TABLE}
+  #     Action:
+  #       - dynamodb:Query
+  #       - dynamodb:GetItem
 
 pingCustomer:
   handler: bin/auth-customers/ping
@@ -31,3 +31,11 @@ pingCustomer:
           name: authorizerCustomer
           resultTtlInSeconds: 0
           identitySource: method.request.header.Authorization
+
+refreshTokenCustomer:
+  handler: bin/auth-customers/refreshToken
+  events:
+    - http:
+        path: /refreshtoken
+        method: post
+        cors: true

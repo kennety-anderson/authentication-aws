@@ -18,8 +18,6 @@ type Request events.APIGatewayCustomAuthorizerRequest
 // Response is event output lambda
 type Response events.APIGatewayCustomAuthorizerResponse
 
-var secretKeyAccessToken = aws.String(os.Getenv("SECRET_ACCESS_TOKEN"))
-
 func generatePolicy(principalID, effect, resource string) Response {
 	authResponse := Response{PrincipalID: principalID}
 
@@ -43,8 +41,26 @@ func generatePolicy(principalID, effect, resource string) Response {
 	return authResponse
 }
 
+func verifyToken(tokenString string, secret []byte) error {
+	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return secret, nil
+	})
+
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+
+	return nil
+}
+
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
+	secretKeyAccessToken := aws.String(os.Getenv("SECRET_ACCESS_TOKEN"))
 
 	tokenString := event.AuthorizationToken
 	secretAccessToken := []byte(*secretKeyAccessToken)
@@ -53,14 +69,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 		return Response{}, errors.New("Unauthorized")
 	}
 
-	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
-
-		return secretAccessToken, nil
-	})
+	err := verifyToken(tokenString, secretAccessToken)
 
 	if err != nil {
 		return Response{}, errors.New("Unauthorized")

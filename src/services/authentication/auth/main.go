@@ -68,26 +68,11 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 
 	timeNow := time.Now()
 
-	// geração dos tokens de acesso
-	// claimsAccess := &jwt.MapClaims{
-	// 	"_id":   result["_id"],
-	// 	"name":  result["name"],
-	// 	"email": result["email"],
-	// 	"exp":   timeNow.UTC().Add(5 * time.Minute).Unix(),
-	// 	"date":  timeNow,
-	// }
-
-	// claimsRefresh := &jwt.MapClaims{
-	// 	"_id":  result["_id"],
-	// 	"exp":  timeNow.UTC().Add(24 * time.Hour).Unix(),
-	// 	"date": timeNow,
-	// }
-
 	accessJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
 		"_id":   result["_id"],
 		"name":  result["name"],
 		"email": result["email"],
-		"exp":   timeNow.UTC().Add(5 * time.Minute).Unix(),
+		"exp":   timeNow.UTC().Add(3 * time.Minute).Unix(),
 		"date":  timeNow,
 	})
 
