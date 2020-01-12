@@ -34,6 +34,12 @@ pingCustomer:
 
 refreshTokenCustomer:
   handler: bin/auth-customers/refreshToken
+  iamRoleStatements:
+    - Effect: "Allow"
+      Resource: arn:aws:dynamodb:*:*:table/${self:provider.environment.DYNAMO_TABLE}
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
   events:
     - http:
         path: /refreshtoken

@@ -65,10 +65,6 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	tokenString := event.AuthorizationToken
 	secretAccessToken := []byte(*secretKeyAccessToken)
 
-	if tokenString == "" {
-		return Response{}, errors.New("Unauthorized")
-	}
-
 	err := verifyToken(tokenString, secretAccessToken)
 
 	if err != nil {

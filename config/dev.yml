@@ -3,4 +3,4 @@ environment:
   DATABASE: ${ssm:/db/mongodb/dataBase}
   SECRET_ACCESS_TOKEN: ${ssm:/${self:custom.stage}/token/secretAccessToken}
   SECRET_REFRESH_TOKEN: ${ssm:/${self:custom.stage}/token/secretRefreshToken}
-  DYNAMO_TABLE: ${ssm:/${self:custom.stage}/db/dynamodb/customersAccessTokensTable}
+  DYNAMO_TABLE: ${ssm:/${self:custom.stage}/db/dynamodb/customersRefreshTokensTable}

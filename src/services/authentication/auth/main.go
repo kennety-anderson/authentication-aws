@@ -38,7 +38,6 @@ var (
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
-	var body []byte
 	var buf bytes.Buffer
 
 	user := make(map[string]string)
@@ -77,9 +76,11 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	})
 
 	refreshJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
-		"_id":  result["_id"],
-		"exp":  timeNow.UTC().Add(24 * time.Hour).Unix(),
-		"date": timeNow,
+		"_id":   result["_id"],
+		"name":  result["name"],
+		"email": result["email"],
+		"exp":   timeNow.UTC().Add(24 * time.Hour).Unix(),
+		"date":  timeNow,
 	})
 
 	secretAccessToken := []byte(*secretKeyAccessToken)
@@ -95,7 +96,6 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	svc := dynamodb.New(sess)
 
 	av, _ := dynamodbattribute.MarshalMap(map[string]string{
-		"accessToken":  accessToken,
 		"refreshToken": refreshToken,
 	})
 
@@ -112,7 +112,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	}
 
 	// reposta lambda
-	body, err = json.Marshal(map[string]interface{}{
+	body, err := json.Marshal(map[string]interface{}{
 		"accessToken":  accessToken,
 		"refreshToken": refreshToken,
 	})
