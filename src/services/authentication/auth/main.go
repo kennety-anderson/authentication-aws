@@ -95,8 +95,9 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	}))
 	svc := dynamodb.New(sess)
 
-	av, _ := dynamodbattribute.MarshalMap(map[string]string{
+	av, _ := dynamodbattribute.MarshalMap(map[string]interface{}{
 		"refreshToken": refreshToken,
+		"ttl":          timeNow.UTC().Add(24 * time.Hour).Unix(),
 	})
 
 	_, err = svc.PutItem(&dynamodb.PutItemInput{

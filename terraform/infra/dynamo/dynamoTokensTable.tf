@@ -5,6 +5,10 @@ resource "aws_dynamodb_table" "customers_refresh_tokens_table" {
     name = "refreshToken"
     type = "S"
   }
+  ttl {
+    attribute_name = "ttl"
+    enabled        = true
+  }
   write_capacity = "${var.write_capacity}"
   read_capacity  = "${var.read_capacity}"
 }
