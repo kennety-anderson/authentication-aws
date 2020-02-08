@@ -89,17 +89,22 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	accessToken, _ := accessJwt.SignedString(secretAccessToken)
 	refreshToken, _ := refreshJwt.SignedString(secretRefreshToken)
 
-	// PutItems dos tokens de acesso no dynamodb
+	// config da sesseion
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
+
+	//criação de uma nova session de conexão
 	svc := dynamodb.New(sess)
 
+	// cria um map de itens para serem adicionados a tabela
 	av, _ := dynamodbattribute.MarshalMap(map[string]interface{}{
+		"email":        result["email"],
 		"refreshToken": refreshToken,
 		"ttl":          timeNow.UTC().Add(24 * time.Hour).Unix(),
 	})
 
+	// PutItems do refreshToken no dynamodb
 	_, err = svc.PutItem(&dynamodb.PutItemInput{
 		Item:      av,
 		TableName: aws.String(*tableName),
@@ -108,7 +113,6 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	// verificação se ouve algum erro ao salvar os tokens do dynamo, mesmo se
 	// tiver ocorrido um erro permite ao usuario se logar retornando os tokens
 	if err != nil {
-		fmt.Println("Erro ao salvar tokens no dynamo")
 		fmt.Println(err.Error())
 	}
 

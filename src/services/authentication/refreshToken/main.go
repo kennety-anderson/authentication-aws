@@ -59,6 +59,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 
 	timeNow := time.Now()
 
+	//gerando um novo accessToken
 	accessJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
 		"_id":   claims["_id"],
 		"name":  claims["name"],
@@ -79,18 +80,22 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 
 	svc := dynamodb.New(sess)
 
+	email := fmt.Sprintf("%v", claims["email"])
+
+	//Get Item do no dynamodb atraves do email
 	data, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(*tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			"refreshToken": {
-				S: aws.String(tokenString),
+			"email": {
+				S: aws.String(email),
 			},
 		},
 	})
 
-	_, item := data.Item["refreshToken"]
+	//pegando valor do refreshToken do dynamoDb
+	item := *data.Item["refreshToken"].S
 
-	if err != nil || item == false {
+	if err != nil || item != tokenString {
 		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
 	}
 

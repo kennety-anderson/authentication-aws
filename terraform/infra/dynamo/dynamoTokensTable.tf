@@ -1,8 +1,8 @@
 resource "aws_dynamodb_table" "customers_refresh_tokens_table" {
   name     = "${var.environment}-customersRefreshTokens"
-  hash_key = "refreshToken"
+  hash_key = "email"
   attribute {
-    name = "refreshToken"
+    name = "email"
     type = "S"
   }
   ttl {

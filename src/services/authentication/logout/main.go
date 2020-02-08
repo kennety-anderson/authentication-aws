@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/dgrijalva/jwt-go"
 )
 
 // Request is event output lambda
@@ -19,11 +20,32 @@ type Request events.APIGatewayProxyRequest
 type Response events.APIGatewayProxyResponse
 
 var tableName = aws.String(os.Getenv("DYNAMO_TABLE"))
+var secretKeyAccessToken = os.Getenv("SECRET_ACCESS_TOKEN")
+
+func verifyToken(tokenString string, secret []byte) (jwt.MapClaims, error) {
+	res, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return secret, nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf(err.Error())
+	}
+
+	return res.Claims.(jwt.MapClaims), nil
+}
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
+	secretAccessToken := []byte(secretKeyAccessToken)
 
 	tokenString := event.Headers["Authorization"]
+
+	claims, _ := verifyToken(tokenString, secretAccessToken)
 
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
@@ -31,16 +53,18 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 
 	svc := dynamodb.New(sess)
 
+	email := fmt.Sprintf("%v", claims["email"])
+
 	data, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(*tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			"refreshToken": {
-				S: aws.String(tokenString),
+			"email": {
+				S: aws.String(email),
 			},
 		},
 	})
 
-	_, item := data.Item["refreshToken"]
+	_, item := data.Item["email"]
 
 	if err != nil || item == false {
 		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
@@ -49,19 +73,14 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	_, err = svc.DeleteItem(&dynamodb.DeleteItemInput{
 		TableName: aws.String(*tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			"refreshToken": {
-				S: aws.String(tokenString),
+			"email": {
+				S: aws.String(email),
 			},
 		},
 	})
 
 	if err != nil {
-		fmt.Println(err)
 		return Response{StatusCode: 422, Body: "Unprocessable Entity"}, nil
-	}
-
-	if err != nil {
-		return Response{StatusCode: 500, Body: "Internal server error"}, nil
 	}
 
 	resp := Response{
