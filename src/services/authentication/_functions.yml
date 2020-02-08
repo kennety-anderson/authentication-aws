@@ -54,7 +54,7 @@ logoutCustomer:
         path: /logout
         method: post
         cors: true
-        # authorizer:
-        #   name: authorizerCustomer
-        #   resultTtlInSeconds: 0
-        #   identitySource: method.request.header.Authorization
+        authorizer:
+          name: authorizerCustomer
+          resultTtlInSeconds: 0
+          identitySource: method.request.header.Authorization
