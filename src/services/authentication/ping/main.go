@@ -20,7 +20,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	var buf bytes.Buffer
 
 	body, err := json.Marshal(map[string]interface{}{
-		"message": "ping",
+		"message": "pong",
 	})
 
 	if err != nil {
