@@ -24,9 +24,9 @@ type Request events.APIGatewayProxyRequest
 type Response events.APIGatewayProxyResponse
 
 var (
-	secretKeyAccessToken  = aws.String(os.Getenv("SECRET_ACCESS_TOKEN"))
-	secretKeyRefreshToken = aws.String(os.Getenv("SECRET_REFRESH_TOKEN"))
-	tableName             = aws.String(os.Getenv("DYNAMO_TABLE"))
+	secretKeyAccessToken  = os.Getenv("SECRET_ACCESS_TOKEN")
+	secretKeyRefreshToken = os.Getenv("SECRET_REFRESH_TOKEN")
+	tableName             = os.Getenv("DYNAMO_TABLE")
 )
 
 func verifyToken(tokenString string, secret []byte) (jwt.MapClaims, error) {
@@ -50,8 +50,8 @@ func verifyToken(tokenString string, secret []byte) (jwt.MapClaims, error) {
 func Handler(ctx context.Context, event Request) (Response, error) {
 	var buf bytes.Buffer
 
-	secretAccessToken := []byte(*secretKeyAccessToken)
-	secretRefreshToken := []byte(*secretKeyRefreshToken)
+	secretAccessToken := []byte(secretKeyAccessToken)
+	secretRefreshToken := []byte(secretKeyRefreshToken)
 
 	tokenString := event.Headers["Authorization"]
 
@@ -84,7 +84,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 
 	//Get Item do no dynamodb atraves do email
 	data, err := svc.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String(*tableName),
+		TableName: aws.String(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"email": {
 				S: aws.String(email),

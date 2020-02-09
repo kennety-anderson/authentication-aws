@@ -30,34 +30,41 @@ type Response events.APIGatewayProxyResponse
 var (
 	collection            = "users"
 	database              = "slsTest"
-	uri                   = aws.String(os.Getenv("MONGO_URI"))
-	secretKeyAccessToken  = aws.String(os.Getenv("SECRET_ACCESS_TOKEN"))
-	secretKeyRefreshToken = aws.String(os.Getenv("SECRET_REFRESH_TOKEN"))
-	tableName             = aws.String(os.Getenv("DYNAMO_TABLE"))
+	uri                   = os.Getenv("MONGO_URI")
+	secretKeyAccessToken  = os.Getenv("SECRET_ACCESS_TOKEN")
+	secretKeyRefreshToken = os.Getenv("SECRET_REFRESH_TOKEN")
+	tableName             = os.Getenv("DYNAMO_TABLE")
 )
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
 	var buf bytes.Buffer
 
-	user := make(map[string]string)
+	user := struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}{}
+
 	json.Unmarshal([]byte(event.Body), &user)
 
 	// conexão com o mongodb e busca do usuario
-	client, _ := mongo.Connect(ctx, options.Client().ApplyURI(*uri))
+	client, _ := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	mgo := client.Database(database).Collection(collection)
 
-	var result bson.M
-	err := mgo.FindOne(ctx, bson.D{{"email", user["email"]}}).Decode(&result)
+	result := struct {
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}{}
+
+	err := mgo.FindOne(ctx, bson.D{{"email", user.Email}}).Decode(&result)
 
 	if err != nil {
 		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
 	}
 
 	// verificação de usuario atraves da senha encriptada
-	hash := fmt.Sprintf("%v", result["password"])
-	hashPassword := []byte(hash)
-	password := []byte(user["password"])
+	hashPassword := []byte(result.Password)
+	password := []byte(user.Password)
 
 	err = bcrypt.CompareHashAndPassword(hashPassword, password)
 
@@ -68,23 +75,21 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	timeNow := time.Now()
 
 	accessJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
-		"_id":   result["_id"],
-		"name":  result["name"],
-		"email": result["email"],
+		"name":  result.Name,
+		"email": user.Email,
 		"exp":   timeNow.UTC().Add(3 * time.Minute).Unix(),
 		"date":  timeNow,
 	})
 
 	refreshJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
-		"_id":   result["_id"],
-		"name":  result["name"],
-		"email": result["email"],
+		"name":  result.Name,
+		"email": user.Email,
 		"exp":   timeNow.UTC().Add(24 * time.Hour).Unix(),
 		"date":  timeNow,
 	})
 
-	secretAccessToken := []byte(*secretKeyAccessToken)
-	secretRefreshToken := []byte(*secretKeyRefreshToken)
+	secretAccessToken := []byte(secretKeyAccessToken)
+	secretRefreshToken := []byte(secretKeyRefreshToken)
 
 	accessToken, _ := accessJwt.SignedString(secretAccessToken)
 	refreshToken, _ := refreshJwt.SignedString(secretRefreshToken)
@@ -99,7 +104,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 
 	// cria um map de itens para serem adicionados a tabela
 	av, _ := dynamodbattribute.MarshalMap(map[string]interface{}{
-		"email":        result["email"],
+		"email":        user.Email,
 		"refreshToken": refreshToken,
 		"ttl":          timeNow.UTC().Add(24 * time.Hour).Unix(),
 	})
@@ -107,7 +112,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	// PutItems do refreshToken no dynamodb
 	_, err = svc.PutItem(&dynamodb.PutItemInput{
 		Item:      av,
-		TableName: aws.String(*tableName),
+		TableName: aws.String(tableName),
 	})
 
 	// verificação se ouve algum erro ao salvar os tokens do dynamo, mesmo se

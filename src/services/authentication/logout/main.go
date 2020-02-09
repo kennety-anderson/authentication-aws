@@ -19,7 +19,7 @@ type Request events.APIGatewayProxyRequest
 // Response is event output lambda
 type Response events.APIGatewayProxyResponse
 
-var tableName = aws.String(os.Getenv("DYNAMO_TABLE"))
+var tableName = os.Getenv("DYNAMO_TABLE")
 var secretKeyAccessToken = os.Getenv("SECRET_ACCESS_TOKEN")
 
 func verifyToken(tokenString string, secret []byte) (jwt.MapClaims, error) {
@@ -56,7 +56,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	email := fmt.Sprintf("%v", claims["email"])
 
 	data, err := svc.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String(*tableName),
+		TableName: aws.String(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"email": {
 				S: aws.String(email),
@@ -71,7 +71,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	}
 
 	_, err = svc.DeleteItem(&dynamodb.DeleteItemInput{
-		TableName: aws.String(*tableName),
+		TableName: aws.String(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"email": {
 				S: aws.String(email),

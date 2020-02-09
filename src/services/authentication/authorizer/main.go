@@ -8,7 +8,6 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -60,10 +59,10 @@ func verifyToken(tokenString string, secret []byte) error {
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
-	secretKeyAccessToken := aws.String(os.Getenv("SECRET_ACCESS_TOKEN"))
+	secretKeyAccessToken := os.Getenv("SECRET_ACCESS_TOKEN")
 
 	tokenString := event.AuthorizationToken
-	secretAccessToken := []byte(*secretKeyAccessToken)
+	secretAccessToken := []byte(secretKeyAccessToken)
 
 	err := verifyToken(tokenString, secretAccessToken)
 
