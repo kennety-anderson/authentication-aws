@@ -1,4 +1,4 @@
-.PHONY: build clean deploy
+.PHONY: build clean deploy tf-apply-dev tf-apply-prod
 
 build:
 	env GOOS=linux go build -ldflags="-s -w" -o bin/auth-customers/auth src/services/authentication/auth/main.go
@@ -12,3 +12,9 @@ clean:
 
 deploy: clean build
 	sls deploy --verbose
+
+tf-apply-dev:
+	cd terraform/environments/dev; terraform apply -auto-approve
+
+tf-apply-prod:
+	cd terraform/environments/prod; terraform apply -auto-approve

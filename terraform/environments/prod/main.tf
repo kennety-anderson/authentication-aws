@@ -1,4 +1,6 @@
-module "name" {
-  source      = "../../infra/dynamo"
-  environment = "${var.environment}"
+module "prod" {
+  source         = "../../infra/dynamo"
+  environment    = "${var.environment}"
+  read_capacity  = "${var.read_capacity}"
+  write_capacity = "${var.write_capacity}"
 }

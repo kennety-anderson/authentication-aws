@@ -1,5 +1,23 @@
 # Authentication service
 
+## Deploy
+O deploy do serviço é dividido em duas partes, aplicação e infraestrutura.
+
+### Deploy service
+Para subir seu serviço basta rodar este comando na raiz do projeto.
+>make deploy
+
+### Deploy infra
+Para subir sua infraestrutura e recursos basta rodar este comando na raiz do projeto.
+Tendo um para ambiente `dev` e um para `prod`.
+> make tf-apply-dev
+
+Ou 
+
+> make td-apply-prod
+Para subir direto para um abiente de produção.
+
+
 ## Sobre
 
 Este é um serviço de authenticação auth 2.0 para lambdas aws com golang e serverless framework,
