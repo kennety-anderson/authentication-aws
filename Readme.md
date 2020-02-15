@@ -10,11 +10,13 @@ Para subir seu serviço basta rodar este comando na raiz do projeto.
 ### Deploy infra
 Para subir sua infraestrutura e recursos basta rodar este comando na raiz do projeto.
 Tendo um para ambiente `dev` e um para `prod`.
+
 > make tf-apply-dev
 
 Ou 
 
-> make td-apply-prod
+> make tf-apply-prod
+
 Para subir direto para um abiente de produção.
 
 
