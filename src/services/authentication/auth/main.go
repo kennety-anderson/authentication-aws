@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -15,6 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/dgrijalva/jwt-go"
+	body "github.com/kennety-anderson/aws-golang-packages/apiGateway"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -27,6 +27,16 @@ type Request events.APIGatewayProxyRequest
 // Response is event output lambda
 type Response events.APIGatewayProxyResponse
 
+// func createBody(data map[string]interface{}) string {
+// 	var buf bytes.Buffer
+
+// 	body, _ := json.Marshal(data)
+
+// 	json.HTMLEscape(&buf, body)
+
+// 	return buf.String()
+// }
+
 var (
 	collection            = "users"
 	database              = "slsTest"
@@ -38,7 +48,13 @@ var (
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
-	var buf bytes.Buffer
+	// var buf bytes.Buffer
+
+	headers := map[string]string{
+		"Content-Type":                     "application/json",
+		"Access-Control-Allow-Origin":      "*",
+		"Access-Control-Allow-Credentials": "false",
+	}
 
 	user := struct {
 		Email    string `json:"email"`
@@ -59,7 +75,9 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	err := mgo.FindOne(ctx, bson.D{{"email", user.Email}}).Decode(&result)
 
 	if err != nil {
-		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
+		return Response{StatusCode: 401, Body: body.Create(map[string]interface{}{
+			"message": "Unauthorized",
+		}), Headers: headers}, nil
 	}
 
 	// verificação de usuario atraves da senha encriptada
@@ -69,7 +87,9 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	err = bcrypt.CompareHashAndPassword(hashPassword, password)
 
 	if err != nil {
-		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
+		return Response{StatusCode: 401, Body: body.Create(map[string]interface{}{
+			"message": "Unauthorized",
+		}), Headers: headers}, nil
 	}
 
 	timeNow := time.Now()
@@ -121,25 +141,14 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 		fmt.Println(err.Error())
 	}
 
-	// reposta lambda
-	body, err := json.Marshal(map[string]interface{}{
-		"accessToken":  accessToken,
-		"refreshToken": refreshToken,
-	})
-
-	if err != nil {
-		return Response{StatusCode: 500, Body: "Internal Server Error"}, nil
-	}
-
-	json.HTMLEscape(&buf, body)
-
 	resp := Response{
 		StatusCode:      200,
 		IsBase64Encoded: false,
-		Body:            buf.String(),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
+		Body: body.Create(map[string]interface{}{
+			"accessToken":  accessToken,
+			"refreshtoken": refreshToken,
+		}),
+		Headers: headers,
 	}
 
 	return resp, nil

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"time"
+
+	body "github.com/kennety-anderson/aws-golang-packages/apiGateway"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -48,7 +48,11 @@ func verifyToken(tokenString string, secret []byte) (jwt.MapClaims, error) {
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
-	var buf bytes.Buffer
+	headers := map[string]string{
+		"Content-Type":                     "application/json",
+		"Access-Control-Allow-Origin":      "*",
+		"Access-Control-Allow-Credentials": "false",
+	}
 
 	secretAccessToken := []byte(secretKeyAccessToken)
 	secretRefreshToken := []byte(secretKeyRefreshToken)
@@ -71,7 +75,9 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	accessToken, _ := accessJwt.SignedString(secretAccessToken)
 
 	if err != nil {
-		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
+		return Response{StatusCode: 401, Body: body.Create(map[string]interface{}{
+			"message": "Unauthorized",
+		}), Headers: headers}, nil
 	}
 
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
@@ -96,26 +102,18 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	item := *data.Item["refreshToken"].S
 
 	if err != nil || item != tokenString {
-		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
+		return Response{StatusCode: 401, Body: body.Create(map[string]interface{}{
+			"message": "Unauthorized",
+		}), Headers: headers}, nil
 	}
-
-	body, err := json.Marshal(map[string]interface{}{
-		"accessToken": accessToken,
-	})
-
-	if err != nil {
-		return Response{StatusCode: 500, Body: "Internal server error!"}, nil
-	}
-
-	json.HTMLEscape(&buf, body)
 
 	resp := Response{
 		StatusCode:      200,
 		IsBase64Encoded: false,
-		Body:            buf.String(),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
+		Body: body.Create(map[string]interface{}{
+			"accessToken": accessToken,
+		}),
+		Headers: headers,
 	}
 
 	return resp, nil

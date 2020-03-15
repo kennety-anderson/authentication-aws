@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	body "github.com/kennety-anderson/aws-golang-packages/apiGateway"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
@@ -41,6 +43,12 @@ func verifyToken(tokenString string, secret []byte) (jwt.MapClaims, error) {
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
+	headers := map[string]string{
+		"Content-Type":                     "application/json",
+		"Access-Control-Allow-Origin":      "*",
+		"Access-Control-Allow-Credentials": "false",
+	}
+
 	secretAccessToken := []byte(secretKeyAccessToken)
 
 	tokenString := event.Headers["Authorization"]
@@ -67,7 +75,9 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	_, item := data.Item["email"]
 
 	if err != nil || item == false {
-		return Response{StatusCode: 401, Body: "Unauthorized"}, nil
+		return Response{StatusCode: 401, Body: body.Create(map[string]interface{}{
+			"message": "Unauthorized",
+		}), Headers: headers}, nil
 	}
 
 	_, err = svc.DeleteItem(&dynamodb.DeleteItemInput{
@@ -80,15 +90,16 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	})
 
 	if err != nil {
-		return Response{StatusCode: 422, Body: "Unprocessable Entity"}, nil
+		return Response{StatusCode: 422, Body: body.Create(map[string]interface{}{
+			"message": "Unprocessable Entity",
+		}), Headers: headers}, nil
+
 	}
 
 	resp := Response{
 		StatusCode:      200,
 		IsBase64Encoded: false,
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
+		Headers:         headers,
 	}
 
 	return resp, nil

@@ -2,91 +2,217 @@
 
 
 [[projects]]
+  digest = "1:a8062972611c57205bf50c1a6fd639883b8a18288e8423549c27f6adac055ea7"
   name = "github.com/DataDog/zstd"
   packages = ["."]
+  pruneopts = ""
   revision = "8fdb579680349497546a04291cedfff98a7829a0"
   version = "v1.4.4"
 
 [[projects]]
+  digest = "1:d37b5cbae31a6d3685931cdb7d355e650a5dcb265dc340b57b6f17158234bd38"
   name = "github.com/aws/aws-lambda-go"
-  packages = ["events","lambda","lambda/handlertrace","lambda/messages","lambdacontext"]
+  packages = [
+    "events",
+    "lambda",
+    "lambda/handlertrace",
+    "lambda/messages",
+    "lambdacontext",
+  ]
+  pruneopts = ""
   revision = "b5b7267d297de263cc5b61f8c37543daa9c95ffd"
   version = "v1.13.3"
 
 [[projects]]
+  digest = "1:746f38b62f00efb405a9ec61b924be5b1a3a83784af2fdd131514ca8f63466e4"
   name = "github.com/aws/aws-sdk-go"
-  packages = ["aws","aws/awserr","aws/awsutil","aws/client","aws/client/metadata","aws/corehandlers","aws/credentials","aws/credentials/ec2rolecreds","aws/credentials/endpointcreds","aws/credentials/processcreds","aws/credentials/stscreds","aws/crr","aws/csm","aws/defaults","aws/ec2metadata","aws/endpoints","aws/request","aws/session","aws/signer/v4","internal/ini","internal/sdkio","internal/sdkmath","internal/sdkrand","internal/sdkuri","internal/shareddefaults","private/protocol","private/protocol/json/jsonutil","private/protocol/jsonrpc","private/protocol/query","private/protocol/query/queryutil","private/protocol/rest","private/protocol/xml/xmlutil","service/dynamodb","service/dynamodb/dynamodbattribute","service/sts","service/sts/stsiface"]
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client",
+    "aws/client/metadata",
+    "aws/corehandlers",
+    "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
+    "aws/credentials/stscreds",
+    "aws/crr",
+    "aws/csm",
+    "aws/defaults",
+    "aws/ec2metadata",
+    "aws/endpoints",
+    "aws/request",
+    "aws/session",
+    "aws/signer/v4",
+    "internal/ini",
+    "internal/sdkio",
+    "internal/sdkmath",
+    "internal/sdkrand",
+    "internal/sdkuri",
+    "internal/shareddefaults",
+    "private/protocol",
+    "private/protocol/json/jsonutil",
+    "private/protocol/jsonrpc",
+    "private/protocol/query",
+    "private/protocol/query/queryutil",
+    "private/protocol/rest",
+    "private/protocol/xml/xmlutil",
+    "service/dynamodb",
+    "service/dynamodb/dynamodbattribute",
+    "service/sts",
+    "service/sts/stsiface",
+  ]
+  pruneopts = ""
   revision = "a25ea3950893fa501b1fc9619eb1b3546c7ad3a0"
   version = "v1.26.5"
 
 [[projects]]
+  digest = "1:6098222470fe0172157ce9bbef5d2200df4edde17ee649c5d6e48330e4afa4c6"
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
+  pruneopts = ""
   revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
   version = "v3.2.0"
 
 [[projects]]
+  digest = "1:a01080d20c45c031c13f3828c56e58f4f51d926a482ad10cc0316225097eb7ea"
   name = "github.com/go-stack/stack"
   packages = ["."]
+  pruneopts = ""
   revision = "2fee6af1a9795aafbe0253a0cfbdf668e1fb8a9a"
   version = "v1.8.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:c823f556d11763bb805a60a77226ae321843c9bd1454ee5b808ca169ac515762"
   name = "github.com/golang/snappy"
   packages = ["."]
+  pruneopts = ""
   revision = "ff6b7dc882cf4cfba7ee0b9f7dcc1ac096c554aa"
 
 [[projects]]
+  digest = "1:13fe471d0ed891e8544eddfeeb0471fd3c9f2015609a1c000aefdedf52a19d40"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
+  pruneopts = ""
   revision = "c2b33e84"
 
 [[projects]]
+  digest = "1:1d7e1867c49a6dd9856598ef7c3123604ea3daabf5b83f303ff457bcbc410b1d"
   name = "github.com/pkg/errors"
   packages = ["."]
+  pruneopts = ""
   revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
   version = "v0.8.1"
 
 [[projects]]
   branch = "master"
+  digest = "1:ad74f33a69bd6ab0bd7287003b7c1069b94cfb5213eb5597005fe2963d7dfca9"
   name = "github.com/xdg/scram"
   packages = ["."]
+  pruneopts = ""
   revision = "7eeb5667e42c09cb51bf7b7c28aea8c56767da90"
 
 [[projects]]
   branch = "master"
+  digest = "1:62f6eb06f6f39d18fc961956116a50a0e52b89961ed8a83bbb950b4cfb09fe67"
   name = "github.com/xdg/stringprep"
   packages = ["."]
+  pruneopts = ""
   revision = "73f8eece6fdcd902c185bf651de50f3828bed5ed"
 
 [[projects]]
+  digest = "1:79491b4217db33faa5486cc3787691997e108334ea1940b34aef5aa3af92ea63"
   name = "go.mongodb.org/mongo-driver"
-  packages = ["bson","bson/bsoncodec","bson/bsonoptions","bson/bsonrw","bson/bsontype","bson/primitive","event","internal","mongo","mongo/options","mongo/readconcern","mongo/readpref","mongo/writeconcern","tag","version","x/bsonx","x/bsonx/bsoncore","x/mongo/driver","x/mongo/driver/address","x/mongo/driver/auth","x/mongo/driver/auth/internal/gssapi","x/mongo/driver/connstring","x/mongo/driver/description","x/mongo/driver/dns","x/mongo/driver/mongocrypt","x/mongo/driver/mongocrypt/options","x/mongo/driver/operation","x/mongo/driver/session","x/mongo/driver/topology","x/mongo/driver/uuid","x/mongo/driver/wiremessage"]
+  packages = [
+    "bson",
+    "bson/bsoncodec",
+    "bson/bsonoptions",
+    "bson/bsonrw",
+    "bson/bsontype",
+    "bson/primitive",
+    "event",
+    "internal",
+    "mongo",
+    "mongo/options",
+    "mongo/readconcern",
+    "mongo/readpref",
+    "mongo/writeconcern",
+    "tag",
+    "version",
+    "x/bsonx",
+    "x/bsonx/bsoncore",
+    "x/mongo/driver",
+    "x/mongo/driver/address",
+    "x/mongo/driver/auth",
+    "x/mongo/driver/auth/internal/gssapi",
+    "x/mongo/driver/connstring",
+    "x/mongo/driver/description",
+    "x/mongo/driver/dns",
+    "x/mongo/driver/mongocrypt",
+    "x/mongo/driver/mongocrypt/options",
+    "x/mongo/driver/operation",
+    "x/mongo/driver/session",
+    "x/mongo/driver/topology",
+    "x/mongo/driver/uuid",
+    "x/mongo/driver/wiremessage",
+  ]
+  pruneopts = ""
   revision = "b414b897457665f12997cefd10ad934ccb9dfb3e"
   version = "v1.2.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:0c8c3d0b028d56a91683bae1bd8a18cc672bb00eaf5797ee129916a61505128f"
   name = "golang.org/x/crypto"
-  packages = ["bcrypt","blowfish","pbkdf2"]
+  packages = [
+    "bcrypt",
+    "blowfish",
+    "pbkdf2",
+  ]
+  pruneopts = ""
   revision = "e9b2fee46413994441b28dfca259d911d963dfed"
 
 [[projects]]
   branch = "master"
+  digest = "1:375358ce220ecbf8c3d441a48746790e906ccf6bcc1f0364158fcbd9819aad92"
   name = "golang.org/x/sync"
   packages = ["semaphore"]
+  pruneopts = ""
   revision = "cd5d95a43a6e21273425c7ae415d3df9ea832eeb"
 
 [[projects]]
+  digest = "1:740b51a55815493a8d0f2b1e0d0ae48fe48953bf7eaf3fcc4198823bf67768c0"
   name = "golang.org/x/text"
-  packages = ["internal/gen","internal/triegen","internal/ucd","transform","unicode/cldr","unicode/norm"]
+  packages = [
+    "internal/gen",
+    "internal/triegen",
+    "internal/ucd",
+    "transform",
+    "unicode/cldr",
+    "unicode/norm",
+  ]
+  pruneopts = ""
   revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
   version = "v0.3.2"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "08c07f2b1b43fcdade378828f537419a5e863519b07caf6eb53ff1a48a6bef04"
+  input-imports = [
+    "github.com/aws/aws-lambda-go/events",
+    "github.com/aws/aws-lambda-go/lambda",
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/dynamodb",
+    "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute",
+    "github.com/dgrijalva/jwt-go",
+    "go.mongodb.org/mongo-driver/bson",
+    "go.mongodb.org/mongo-driver/mongo",
+    "go.mongodb.org/mongo-driver/mongo/options",
+    "golang.org/x/crypto/bcrypt",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

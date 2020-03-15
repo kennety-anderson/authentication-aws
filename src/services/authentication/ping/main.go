@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
+
+	body "github.com/kennety-anderson/aws-golang-packages/apiGateway"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -17,25 +17,19 @@ type Response events.APIGatewayProxyResponse
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event Request) (Response, error) {
-	var buf bytes.Buffer
-
-	body, err := json.Marshal(map[string]interface{}{
-		"message": "pong",
-	})
-
-	if err != nil {
-		return Response{StatusCode: 500, Body: "Internal Server Error"}, nil
+	headers := map[string]string{
+		"Content-Type":                     "application/json",
+		"Access-Control-Allow-Origin":      "*",
+		"Access-Control-Allow-Credentials": "false",
 	}
-
-	json.HTMLEscape(&buf, body)
 
 	resp := Response{
 		StatusCode:      200,
 		IsBase64Encoded: false,
-		Body:            buf.String(),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
+		Body: body.Create(map[string]interface{}{
+			"message": "pong",
+		}),
+		Headers: headers,
 	}
 
 	return resp, nil
