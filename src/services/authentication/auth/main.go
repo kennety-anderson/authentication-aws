@@ -14,7 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/dgrijalva/jwt-go"
-	body "github.com/kennety-anderson/aws-golang-packages/apiGateway"
+	body "github.com/kennety-anderson/aws-api-gateway-packages/body"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -38,7 +38,7 @@ type Response events.APIGatewayProxyResponse
 // }
 
 var (
-	collection            = "users"
+	collection            = "customers"
 	database              = "slsTest"
 	uri                   = os.Getenv("MONGO_URI")
 	secretKeyAccessToken  = os.Getenv("SECRET_ACCESS_TOKEN")

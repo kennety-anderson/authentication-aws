@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	body "github.com/kennety-anderson/aws-golang-packages/apiGateway"
+	body "github.com/kennety-anderson/aws-api-gateway-packages/body"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
