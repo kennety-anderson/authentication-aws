@@ -27,16 +27,6 @@ type Request events.APIGatewayProxyRequest
 // Response is event output lambda
 type Response events.APIGatewayProxyResponse
 
-// func createBody(data map[string]interface{}) string {
-// 	var buf bytes.Buffer
-
-// 	body, _ := json.Marshal(data)
-
-// 	json.HTMLEscape(&buf, body)
-
-// 	return buf.String()
-// }
-
 var (
 	collection            = "customers"
 	database              = "slsTest"
@@ -68,6 +58,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	mgo := client.Database(database).Collection(collection)
 
 	result := struct {
+		ID       string `json:"_id" bson:"_id"`
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	}{}
@@ -95,6 +86,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	timeNow := time.Now()
 
 	accessJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
+		"_id":   result.ID,
 		"name":  result.Name,
 		"email": user.Email,
 		"exp":   timeNow.UTC().Add(3 * time.Minute).Unix(),
@@ -102,6 +94,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 	})
 
 	refreshJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
+		"_id":   result.ID,
 		"name":  result.Name,
 		"email": user.Email,
 		"exp":   timeNow.UTC().Add(24 * time.Hour).Unix(),
@@ -145,6 +138,8 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 		StatusCode:      200,
 		IsBase64Encoded: false,
 		Body: body.Create(map[string]interface{}{
+			"_id":          result.ID,
+			"name":         result.Name,
 			"accessToken":  accessToken,
 			"refreshtoken": refreshToken,
 		}),
