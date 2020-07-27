@@ -140,6 +140,7 @@ func Handler(ctx context.Context, event Request) (Response, error) {
 		Body: body.Create(map[string]interface{}{
 			"_id":          result.ID,
 			"name":         result.Name,
+			"email":        user.Email,
 			"accessToken":  accessToken,
 			"refreshtoken": refreshToken,
 		}),
